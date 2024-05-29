@@ -4,8 +4,10 @@ import Connecion.ConectionBD;
 import Controler.com.company.ControllerEntrada;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class ViewPersona {
+public class ViewPersona extends JFrame{
     private JTextField textNIFPer;
     private JTextField textNombrePer;
     private JTextField textApellido1Per;
@@ -26,12 +28,20 @@ public class ViewPersona {
 
     public ViewPersona() {
 
+        consultarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ConectionBD.openConn();
+            }
+        });
     }
 
     public static void main(String[] args) {
-        ConectionBD.openConn();
-        System.out.println("hola");
-        ConectionBD.closeConn();
+        ViewPersona f = new ViewPersona();
+        f.setContentPane(new ViewPersona().panelPersona);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+        f.pack();
 
     }
 }
