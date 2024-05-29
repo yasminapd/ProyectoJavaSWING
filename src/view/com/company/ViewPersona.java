@@ -116,6 +116,7 @@ public class ViewPersona extends JFrame{
             mod.removeAllElements();
             mod.addElement("Se ingresó la información correctamente.");
 
+            textIdPer.setText("");
             textNIFPer.setText("");
             textNombrePer.setText("");
             textApellido1Per.setText("");
