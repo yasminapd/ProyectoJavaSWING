@@ -14,14 +14,13 @@ public class ViewAsignatura extends JFrame {
     private JTextField textNombreAsig;
     private JTextField textCreditosAsig;
     private JTextField textIdProfeAsig;
-    private JTextField textCursoAsig; // Asegúrate de que este campo existe si es usado en el formulario
+    private JTextField textCursoAsig;
     private JButton insertarButtonAsig;
     private JButton modificarButtonAsig;
     private JButton borrarButtonAsig;
     private JList<String> tablaAsignatura;
     private JPanel panelAsignatura;
     private JButton consultarButtonAsig;
-
     private JTextField textCuatrimestreAsig;
     private JTextField textTipoAsig;
     private JTextField textIdGradoAsig;
@@ -30,7 +29,6 @@ public class ViewAsignatura extends JFrame {
     Connection con = ConectionBD.getConn();
     Statement st;
     ResultSet r;
-
     DefaultListModel<String> mod = new DefaultListModel<>();
 
     public ViewAsignatura() {
@@ -92,13 +90,13 @@ public class ViewAsignatura extends JFrame {
         while (r.next()) {
             mod.addElement(
                     r.getString("id") + " " +
-                    r.getString("nombre") + " " +
-                    r.getInt("creditos") + " " +
-                    r.getString("tipo") + " " +
-                    r.getString("curso") + " " +
-                    r.getString("cuatrimestre") + " " +
-                    r.getString("id_profesor") + " " +
-                    r.getInt("id_grado"));
+                            r.getString("nombre") + " " +
+                            r.getInt("creditos") + " " +
+                            r.getString("tipo") + " " +
+                            r.getString("curso") + " " +
+                            r.getString("cuatrimestre") + " " +
+                            r.getString("id_profesor") + " " +
+                            r.getInt("id_grado"));
         }
     }
 
@@ -118,7 +116,6 @@ public class ViewAsignatura extends JFrame {
             return;
         }
 
-        
         ps = con.prepareStatement("INSERT INTO asignatura (id, nombre, creditos, tipo, curso, cuatrimestre, id_profesor, id_grado) VALUES (?,?,?,?,?,?,?,?)");
         ps.setInt(1, Integer.parseInt(textIdAsig.getText()));
         ps.setString(2, textNombreAsig.getText());
@@ -138,13 +135,16 @@ public class ViewAsignatura extends JFrame {
             textCreditosAsig.setText("");
             textIdProfeAsig.setText("");
             textCursoAsig.setText("");
+            textCuatrimestreAsig.setText("");
+            textTipoAsig.setText("");
+            textIdGradoAsig.setText("");
         }
     }
 
     public void borrar() throws SQLException {
         int id = Integer.parseInt(textIdAsig.getText());
         ps = con.prepareStatement("DELETE FROM asignatura WHERE id = ?");
-        ps.setInt(1, Integer.parseInt(textIdAsig.getText()));
+        ps.setInt(1, id);
         int rowsAffected = ps.executeUpdate();
         if (rowsAffected > 0) {
             JOptionPane.showMessageDialog(null, "Registro borrado correctamente");
@@ -161,24 +161,40 @@ public class ViewAsignatura extends JFrame {
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            String codigo = rs.getString("codigo");
             String nombre = rs.getString("nombre");
-            int creditos = rs.getInt("creditos");
-            int idProfesor = rs.getInt("id_profesor");
+            String creditos = rs.getString("creditos");
+            String tipo = rs.getString("tipo");
+            String curso = rs.getString("curso");
+            String cuatrimestre = rs.getString("cuatrimestre");
+            String id_profesor = rs.getString("id_profesor");
+            String id_grado = rs.getString("id_grado");
 
-            if (!textIdAsig.getText().trim().isEmpty()) {
-                codigo = textIdAsig.getText();
-            }
             if (!textNombreAsig.getText().trim().isEmpty()) {
                 nombre = textNombreAsig.getText();
             }
             if (!textCreditosAsig.getText().trim().isEmpty()) {
-                creditos = Integer.parseInt(textCreditosAsig.getText());
+                creditos = textCreditosAsig.getText();
+            }
+            if (!textTipoAsig.getText().trim().isEmpty()) {
+                tipo = textTipoAsig.getText();
+            }
+            if (!textCursoAsig.getText().trim().isEmpty()) {
+                curso = textCursoAsig.getText();
+            }
+            if (!textCuatrimestreAsig.getText().trim().isEmpty()) {
+                cuatrimestre = textCuatrimestreAsig.getText();
             }
             if (!textIdProfeAsig.getText().trim().isEmpty()) {
-                idProfesor = Integer.parseInt(textIdProfeAsig.getText());
+                id_profesor = textIdProfeAsig.getText();
+            }
+            if (!textIdGradoAsig.getText().trim().isEmpty()) {
+                id_grado = textIdGradoAsig.getText();
+            }
 
-                // Verificar si el nuevo id_profesor existe en la tabla profesor
+            // Verificar si el nuevo id_profesor existe en la tabla profesor
+            int idProfesor;
+            if (!textIdProfeAsig.getText().trim().isEmpty()) {
+                idProfesor = Integer.parseInt(textIdProfeAsig.getText());
                 String sqlCheck = "SELECT COUNT(*) FROM profesor WHERE id_profesor = ?";
                 ps = con.prepareStatement(sqlCheck);
                 ps.setInt(1, idProfesor);
@@ -190,15 +206,20 @@ public class ViewAsignatura extends JFrame {
                     JOptionPane.showMessageDialog(null, "El ID del profesor no existe. Por favor, ingrese un ID de profesor válido.");
                     return;
                 }
+            } else {
+                idProfesor = Integer.parseInt(id_profesor);
             }
 
-            String sqlUpdate = "UPDATE asignatura SET codigo = ?, nombre = ?, creditos = ?, id_profesor = ? WHERE id = ?";
+            String sqlUpdate = "UPDATE asignatura SET nombre = ?, creditos = ?, tipo=?, curso=?, cuatrimestre= ?, id_profesor = ?, id_grado=? WHERE id = ?";
             ps = con.prepareStatement(sqlUpdate);
-            ps.setString(1, codigo);
-            ps.setString(2, nombre);
-            ps.setInt(3, creditos);
-            ps.setInt(4, idProfesor);
-            ps.setInt(5, id);
+            ps.setString(1, nombre);
+            ps.setInt(2, Integer.parseInt(creditos));
+            ps.setString(3, tipo);
+            ps.setString(4, curso);
+            ps.setString(5, cuatrimestre);
+            ps.setInt(6, idProfesor);
+            ps.setInt(7, Integer.parseInt(id_grado));
+            ps.setInt(8, id);
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
