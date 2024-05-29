@@ -136,7 +136,7 @@ public class ViewAsignatura extends JFrame {
     public void borrar() throws SQLException {
         int id = Integer.parseInt(textIdAsig.getText());
         ps = con.prepareStatement("DELETE FROM asignatura WHERE id = ?");
-        ps.setInt(1, id);
+        ps.setInt(1, Integer.parseInt(textIdAsig.getText()));
         int rowsAffected = ps.executeUpdate();
         if (rowsAffected > 0) {
             JOptionPane.showMessageDialog(null, "Registro borrado correctamente");
