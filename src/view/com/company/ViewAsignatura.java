@@ -21,7 +21,7 @@ public class ViewAsignatura extends JFrame {
     private JList<String> tablaAsignatura;
     private JPanel panelAsignatura;
     private JButton consultarButtonAsig;
-    private JTextField textIdAsig;
+
     private JTextField textCuatrimestreAsig;
     private JTextField textTipoAsig;
     private JTextField textIdGradoAsig;
@@ -111,12 +111,15 @@ public class ViewAsignatura extends JFrame {
         }
 
         
-        ps = con.prepareStatement("INSERT INTO asignatura (id, nombre, creditos, id_profesor, id_grado) VALUES (?,?,?,?,?)");
+        ps = con.prepareStatement("INSERT INTO asignatura (id, nombre, creditos, tipo, curso, cuatrimestre, id_profesor, id_grado) VALUES (?,?,?,?,?,?,?,?)");
         ps.setInt(1, Integer.parseInt(textIdAsig.getText()));
         ps.setString(2, textNombreAsig.getText());
         ps.setInt(3, Integer.parseInt(textCreditosAsig.getText()));
-        ps.setInt(4, idProfesor);
-        ps.setInt(5, Integer.parseInt(textIdGradoAsig.getText()));
+        ps.setString(4, textTipoAsig.getText());
+        ps.setString(5, textCursoAsig.getText());
+        ps.setString(6, textCuatrimestreAsig.getText());
+        ps.setInt(7, idProfesor);
+        ps.setInt(8, Integer.parseInt(textIdGradoAsig.getText()));
         if (ps.executeUpdate() > 0) {
             tablaAsignatura.setModel(mod);
             mod.removeAllElements();
