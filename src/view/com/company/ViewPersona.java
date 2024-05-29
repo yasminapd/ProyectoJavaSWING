@@ -1,12 +1,11 @@
 package view.com.company;
 
 import Connecion.ConectionBD;
-import Controler.com.company.ControllerEntrada;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.sql.*;
 
 public class ViewPersona extends JFrame{
@@ -27,6 +26,7 @@ public class ViewPersona extends JFrame{
     private JButton consultarButton;
     private JTextField textSexoPer;
     private JTextField textTipoPer;
+    private JTextField textIdPer;
     PreparedStatement ps;
     Connection con = ConectionBD.getConn();
     Statement st;
@@ -59,7 +59,6 @@ public class ViewPersona extends JFrame{
     }
 
     public void listar() throws SQLException {
-        ConectionBD.openConn();
         tablaPersona.setModel(mod);
         st = con.createStatement();
         r = st.executeQuery("select * from persona");
@@ -72,9 +71,8 @@ public class ViewPersona extends JFrame{
     }
 
     public void insertar() throws SQLException {
-        ConectionBD.openConn();
-        ps = con.prepareStatement("INSERT INTO persona VALUES ('.?,?,?,?,?,?,?,?,?,?)");
-        ps.setInt(1,);
+        ps = con.prepareStatement("INSERT INTO persona VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+        ps.setInt(1, Integer.parseInt(textIdPer.getText()));
         ps.setString(2,textNIFPer.getText());
         ps.setString(3,textNombrePer.getText());
         ps.setString(4,textApellido1Per.getText());
@@ -102,6 +100,9 @@ public class ViewPersona extends JFrame{
             textTipoPer.setText("");
         }
     }
+
+
+
     public static void main(String[] args) {
         ConectionBD.openConn();
         ViewPersona f = new ViewPersona();
