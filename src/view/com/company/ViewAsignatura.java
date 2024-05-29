@@ -90,7 +90,15 @@ public class ViewAsignatura extends JFrame {
         r = st.executeQuery("SELECT * FROM asignatura");
         mod.removeAllElements();
         while (r.next()) {
-            mod.addElement(r.getString("codigo") + " " + r.getString("nombre") + " " + r.getInt("creditos") + " " + r.getInt("id_profesor"));
+            mod.addElement(
+                    r.getString("id") + " " +
+                    r.getString("nombre") + " " +
+                    r.getInt("creditos") + " " +
+                    r.getString("tipo") + " " +
+                    r.getString("curso") + " " +
+                    r.getString("cuatrimestre") + " " +
+                    r.getString("id_profesor") + " " +
+                    r.getInt("id_grado"));
         }
     }
 
