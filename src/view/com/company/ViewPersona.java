@@ -56,6 +56,26 @@ public class ViewPersona extends JFrame{
                 }
             }
         });
+        borrarButtonPer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    borrar();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+        modificarButtonPer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    modificar();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     public void listar() throws SQLException {
@@ -101,6 +121,40 @@ public class ViewPersona extends JFrame{
         }
     }
 
+    public void borrar() throws SQLException{
+        ps = con.prepareStatement("DELETE FROM persona WHERE id = ?");
+        ps.setInt(1, Integer.parseInt(textIdPer.getText()));
+        int rowsAffected = ps.executeUpdate();
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null, "Registro borrado correctamente");
+            listar();  // Actualizar la lista después de borrar
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró el registro con el ID especificado");
+        }
+    }
+
+    public void modificar() throws SQLException{
+        ps = con.prepareStatement("UPDATE persona SET nif = ?, nombre = ?, apellido1 = ?, apellido2 = ?, ciudad = ?, direccion = ?, telefono = ?, fecha_nacimiento = ?, sexo = ?, tipo = ? WHERE id = ?");
+        ps.setString(1, textNIFPer.getText());
+        ps.setString(2, textNombrePer.getText());
+        ps.setString(3, textApellido1Per.getText());
+        ps.setString(4, textApellido2Per.getText());
+        ps.setString(5, textCiudadPer.getText());
+        ps.setString(6, textDireccionPer.getText());
+        ps.setString(7, textTelefonoPer.getText());
+        ps.setString(8, textFNacimientoPer.getText());
+        ps.setString(9, textSexoPer.getText());
+        ps.setString(10, textTipoPer.getText());
+        ps.setInt(11, Integer.parseInt(textIdPer.getText()));
+
+        int rowsAffected = ps.executeUpdate();
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null, "Registro modificado correctamente");
+            listar();  // Actualizar la lista después de modificar
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró el registro con el ID especificado");
+        }
+    }
 
 
     public static void main(String[] args) {
