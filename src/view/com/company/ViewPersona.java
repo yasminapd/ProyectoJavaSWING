@@ -1,5 +1,8 @@
 package view.com.company;
 
+import Connecion.ConectionBD;
+import Controler.com.company.ControllerEntrada;
+
 import javax.swing.*;
 
 public class ViewPersona {
@@ -21,4 +24,14 @@ public class ViewPersona {
     private JTextField textSexoPer;
     private JTextField textTipoPer;
 
+    public ViewPersona() {
+
+    }
+
+    public static void main(String[] args) {
+        ConectionBD.openConn();
+        System.out.println("hola");
+        ConectionBD.closeConn();
+
+    }
 }

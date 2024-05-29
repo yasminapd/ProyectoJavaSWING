@@ -32,6 +32,7 @@ public class ConectionBD {
             String sUrl = url + ":" + port + "/" + db + "?zeroDateTimeBehavior=convertToNull";
             conn = DriverManager.getConnection(sUrl, user, passwd);
             System.out.println(sUrl);
+            System.out.println("Conectado a BBDD");
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error en la conexión");
@@ -53,6 +54,7 @@ public class ConectionBD {
     public static void closeConn() {
         try {
             JOptionPane.showMessageDialog(null, "Se cerró la conexión con la BBDD");
+            System.out.println("Conexión cerrada");
             conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
