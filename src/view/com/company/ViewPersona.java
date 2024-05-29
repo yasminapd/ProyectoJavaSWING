@@ -5,6 +5,7 @@ import Connecion.ConectionBD;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.*;
 
@@ -76,6 +77,13 @@ public class ViewPersona extends JFrame{
                 }
             }
         });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                ConectionBD.closeConn();
+            }
+        });
     }
 
     public void listar() throws SQLException {
@@ -133,24 +141,76 @@ public class ViewPersona extends JFrame{
         }
     }
 
-    public void modificar() throws SQLException{
-        ps = con.prepareStatement("UPDATE persona SET nif = ?, nombre = ?, apellido1 = ?, apellido2 = ?, ciudad = ?, direccion = ?, telefono = ?, fecha_nacimiento = ?, sexo = ?, tipo = ? WHERE id = ?");
-        ps.setString(1, textNIFPer.getText());
-        ps.setString(2, textNombrePer.getText());
-        ps.setString(3, textApellido1Per.getText());
-        ps.setString(4, textApellido2Per.getText());
-        ps.setString(5, textCiudadPer.getText());
-        ps.setString(6, textDireccionPer.getText());
-        ps.setString(7, textTelefonoPer.getText());
-        ps.setString(8, textFNacimientoPer.getText());
-        ps.setString(9, textSexoPer.getText());
-        ps.setString(10, textTipoPer.getText());
-        ps.setInt(11, Integer.parseInt(textIdPer.getText()));
+    public void modificar() throws SQLException {
+        int id = Integer.parseInt(textIdPer.getText());
+        String sqlSelect = "SELECT * FROM persona WHERE id = ?";
+        ps = con.prepareStatement(sqlSelect);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            String nif = rs.getString("nif");
+            String nombre = rs.getString("nombre");
+            String apellido1 = rs.getString("apellido1");
+            String apellido2 = rs.getString("apellido2");
+            String ciudad = rs.getString("ciudad");
+            String direccion = rs.getString("direccion");
+            String telefono = rs.getString("telefono");
+            String fechaNacimiento = rs.getString("fecha_nacimiento");
+            String sexo = rs.getString("sexo");
+            String tipo = rs.getString("tipo");
 
-        int rowsAffected = ps.executeUpdate();
-        if (rowsAffected > 0) {
-            JOptionPane.showMessageDialog(null, "Registro modificado correctamente");
-            listar();  // Actualizar la lista después de modificar
+            if (!textNIFPer.getText().trim().isEmpty()) {
+                nif = textNIFPer.getText();
+            }
+            if (!textNombrePer.getText().trim().isEmpty()) {
+                nombre = textNombrePer.getText();
+            }
+            if (!textApellido1Per.getText().trim().isEmpty()) {
+                apellido1 = textApellido1Per.getText();
+            }
+            if (!textApellido2Per.getText().trim().isEmpty()) {
+                apellido2 = textApellido2Per.getText();
+            }
+            if (!textCiudadPer.getText().trim().isEmpty()) {
+                ciudad = textCiudadPer.getText();
+            }
+            if (!textDireccionPer.getText().trim().isEmpty()) {
+                direccion = textDireccionPer.getText();
+            }
+            if (!textTelefonoPer.getText().trim().isEmpty()) {
+                telefono = textTelefonoPer.getText();
+            }
+            if (!textFNacimientoPer.getText().trim().isEmpty()) {
+                fechaNacimiento = textFNacimientoPer.getText();
+            }
+            if (!textSexoPer.getText().trim().isEmpty()) {
+                sexo = textSexoPer.getText();
+            }
+            if (!textTipoPer.getText().trim().isEmpty()) {
+                tipo = textTipoPer.getText();
+            }
+
+            String sqlUpdate = "UPDATE persona SET nif = ?, nombre = ?, apellido1 = ?, apellido2 = ?, ciudad = ?, direccion = ?, telefono = ?, fecha_nacimiento = ?, sexo = ?, tipo = ? WHERE id = ?";
+            ps = con.prepareStatement(sqlUpdate);
+            ps.setString(1, nif);
+            ps.setString(2, nombre);
+            ps.setString(3, apellido1);
+            ps.setString(4, apellido2);
+            ps.setString(5, ciudad);
+            ps.setString(6, direccion);
+            ps.setString(7, telefono);
+            ps.setString(8, fechaNacimiento);
+            ps.setString(9, sexo);
+            ps.setString(10, tipo);
+            ps.setInt(11, id);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Registro modificado correctamente");
+                listar();  // Actualizar la lista después de modificar
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontró el registro con el ID especificado");
+            }
         } else {
             JOptionPane.showMessageDialog(null, "No se encontró el registro con el ID especificado");
         }
