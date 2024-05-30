@@ -1,6 +1,7 @@
 package view.com.company;
 
 import controller.com.company.ControllerPersonas;
+import Connecion.ConectionBD;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -47,7 +48,18 @@ public class ViewPersona extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (controller.insertar(Integer.parseInt(textIdPer.getText()), textNIFPer.getText(), textNombrePer.getText(), textApellido1Per.getText(), textApellido2Per.getText(), textCiudadPer.getText(), textDireccionPer.getText(), textTelefonoPer.getText(), textFNacimientoPer.getText(), textSexoPer.getText(), textTipoPer.getText())) {
+                    if (controller.insertar(
+                            Integer.parseInt(textIdPer.getText()),
+                            textNIFPer.getText(),
+                            textNombrePer.getText(),
+                            textApellido1Per.getText(),
+                            textApellido2Per.getText(),
+                            textCiudadPer.getText(),
+                            textDireccionPer.getText(),
+                            textTelefonoPer.getText(),
+                            textFNacimientoPer.getText(),
+                            textSexoPer.getText(),
+                            textTipoPer.getText())) {
                         JOptionPane.showMessageDialog(null, "Se ingresó la información correctamente.");
                         tablaPersona.setModel(controller.listar());
                     }
@@ -75,7 +87,18 @@ public class ViewPersona extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (controller.modificar(Integer.parseInt(textIdPer.getText()), textNIFPer.getText(), textNombrePer.getText(), textApellido1Per.getText(), textApellido2Per.getText(), textCiudadPer.getText(), textDireccionPer.getText(), textTelefonoPer.getText(), textFNacimientoPer.getText(), textSexoPer.getText(), textTipoPer.getText())) {
+                    if (controller.modificar(
+                            Integer.parseInt(textIdPer.getText()),
+                            textNIFPer.getText(),
+                            textNombrePer.getText(),
+                            textApellido1Per.getText(),
+                            textApellido2Per.getText(),
+                            textCiudadPer.getText(),
+                            textDireccionPer.getText(),
+                            textTelefonoPer.getText(),
+                            textFNacimientoPer.getText(),
+                            textSexoPer.getText(),
+                            textTipoPer.getText())) {
                         JOptionPane.showMessageDialog(null, "Registro modificado correctamente");
                         tablaPersona.setModel(controller.listar());
                     } else {
@@ -90,11 +113,7 @@ public class ViewPersona extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                try {
-                    controller.close();
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
+                ConectionBD.closeConn();
             }
         });
     }
