@@ -8,29 +8,20 @@ import java.sql.SQLException;
 
 public class ControllerAsignaturas {
     private ModelAsignaturas model;
-    private DefaultListModel<String> mod;
 
     public ControllerAsignaturas() {
         model = new ModelAsignaturas();
-        mod = new DefaultListModel<>();
     }
 
     public DefaultListModel<String> listar() throws SQLException {
         ResultSet rs = model.listar();
-        mod.removeAllElements();
+        DefaultListModel<String> listModel = new DefaultListModel<>();
         while (rs.next()) {
-            mod.addElement(
-                    rs.getString("id") + " " +
-                            rs.getString("nombre") + " " +
-                            rs.getInt("creditos") + " " +
-                            rs.getString("tipo") + " " +
-                            rs.getString("curso") + " " +
-                            rs.getString("cuatrimestre") + " " +
-                            rs.getString("id_profesor") + " " +
-                            rs.getInt("id_grado")
-            );
+            listModel.addElement(rs.getInt("id") + " " + rs.getString("nombre") + " " + rs.getInt("creditos") + " " +
+                    rs.getString("tipo") + " " + rs.getString("curso") + " " + rs.getString("cuatrimestre") + " " +
+                    rs.getInt("id_profesor") + " " + rs.getInt("id_grado"));
         }
-        return mod;
+        return listModel;
     }
 
     public boolean insertar(int id, String nombre, int creditos, String tipo, String curso, String cuatrimestre, int idProfesor, int idGrado) throws SQLException {
@@ -43,6 +34,17 @@ public class ControllerAsignaturas {
 
     public boolean modificar(int id, String nombre, int creditos, String tipo, String curso, String cuatrimestre, int idProfesor, int idGrado) throws SQLException {
         return model.modificar(id, nombre, creditos, tipo, curso, cuatrimestre, idProfesor, idGrado);
+    }
+
+    public DefaultListModel<String> buscar(String nombre, String tipo, String curso, String cuatrimestre, String idProfesor, String idGrado) throws SQLException {
+        ResultSet rs = model.buscar(nombre, tipo, curso, cuatrimestre, idProfesor, idGrado);
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        while (rs.next()) {
+            listModel.addElement(rs.getInt("id") + " " + rs.getString("nombre") + " " + rs.getInt("creditos") + " " +
+                    rs.getString("tipo") + " " + rs.getString("curso") + " " + rs.getString("cuatrimestre") + " " +
+                    rs.getInt("id_profesor") + " " + rs.getInt("id_grado"));
+        }
+        return listModel;
     }
 
     public void close() throws SQLException {

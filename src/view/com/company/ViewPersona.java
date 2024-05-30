@@ -1,6 +1,6 @@
 package view.com.company;
 
-import controller.com.company.ControllerPersonas;
+import Controler.com.company.ControllerPersonas;
 import Connecion.ConectionBD;
 
 import javax.swing.*;
@@ -104,6 +104,28 @@ public class ViewPersona extends JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "No se encontró el registro con el ID especificado");
                     }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        buscarButtonPer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String nif = textNIFPer.getText().trim();
+                    String nombre = textNombrePer.getText().trim();
+                    String apellido1 = textApellido1Per.getText().trim();
+                    String apellido2 = textApellido2Per.getText().trim();
+                    String ciudad = textCiudadPer.getText().trim();
+                    String direccion = textDireccionPer.getText().trim();
+                    String telefono = textTelefonoPer.getText().trim();
+                    String fechaNacimiento = textFNacimientoPer.getText().trim();
+                    String sexo = textSexoPer.getText().trim();
+                    String tipo = textTipoPer.getText().trim();
+
+                    tablaPersona.setModel(controller.buscar(nif, nombre, apellido1, apellido2, ciudad, direccion, telefono, fechaNacimiento, sexo, tipo));
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }

@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class ModelPersonas {
     private Connection con;
@@ -21,8 +20,8 @@ public class ModelPersonas {
     }
 
     public ResultSet listar() throws SQLException {
-        Statement st = con.createStatement();
-        return st.executeQuery("SELECT * FROM persona");
+        ps = con.prepareStatement("SELECT * FROM persona");
+        return ps.executeQuery();
     }
 
     public boolean insertar(int id, String nif, String nombre, String apellido1, String apellido2, String ciudad, String direccion, String telefono, String fechaNacimiento, String sexo, String tipo) throws SQLException {
@@ -50,6 +49,35 @@ public class ModelPersonas {
     public ResultSet buscarPorId(int id) throws SQLException {
         ps = con.prepareStatement("SELECT * FROM persona WHERE id = ?");
         ps.setInt(1, id);
+        return ps.executeQuery();
+    }
+
+    public ResultSet buscar(String nif, String nombre, String apellido1, String apellido2, String ciudad, String direccion, String telefono, String fechaNacimiento, String sexo, String tipo) throws SQLException {
+        StringBuilder query = new StringBuilder("SELECT * FROM persona WHERE 1=1");
+        if (!nif.isEmpty()) query.append(" AND nif LIKE ?");
+        if (!nombre.isEmpty()) query.append(" AND nombre LIKE ?");
+        if (!apellido1.isEmpty()) query.append(" AND apellido1 LIKE ?");
+        if (!apellido2.isEmpty()) query.append(" AND apellido2 LIKE ?");
+        if (!ciudad.isEmpty()) query.append(" AND ciudad LIKE ?");
+        if (!direccion.isEmpty()) query.append(" AND direccion LIKE ?");
+        if (!telefono.isEmpty()) query.append(" AND telefono LIKE ?");
+        if (!fechaNacimiento.isEmpty()) query.append(" AND fecha_nacimiento LIKE ?");
+        if (!sexo.isEmpty()) query.append(" AND sexo LIKE ?");
+        if (!tipo.isEmpty()) query.append(" AND tipo LIKE ?");
+
+        ps = con.prepareStatement(query.toString());
+        int index = 1;
+        if (!nif.isEmpty()) ps.setString(index++, "%" + nif + "%");
+        if (!nombre.isEmpty()) ps.setString(index++, "%" + nombre + "%");
+        if (!apellido1.isEmpty()) ps.setString(index++, "%" + apellido1 + "%");
+        if (!apellido2.isEmpty()) ps.setString(index++, "%" + apellido2 + "%");
+        if (!ciudad.isEmpty()) ps.setString(index++, "%" + ciudad + "%");
+        if (!direccion.isEmpty()) ps.setString(index++, "%" + direccion + "%");
+        if (!telefono.isEmpty()) ps.setString(index++, "%" + telefono + "%");
+        if (!fechaNacimiento.isEmpty()) ps.setString(index++, "%" + fechaNacimiento + "%");
+        if (!sexo.isEmpty()) ps.setString(index++, "%" + sexo + "%");
+        if (!tipo.isEmpty()) ps.setString(index++, "%" + tipo + "%");
+
         return ps.executeQuery();
     }
 
