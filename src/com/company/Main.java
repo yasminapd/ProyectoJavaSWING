@@ -1,14 +1,14 @@
 package com.company;
 
-import Controler.com.company.ControllerEntrada;
+import view.com.company.ViewMenu;
 
 public class Main {
-
     public static void main(String[] args) {
-	 //write your code here
-
-          new ControllerEntrada();
-
-
-   }
+        // Crear y mostrar la ventana del menú principal
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new ViewMenu();
+            }
+        });
+    }
 }

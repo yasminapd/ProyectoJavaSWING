@@ -1,39 +1,64 @@
 package model.com.company;
 
 import Connecion.ConectionBD;
-
-import javax.swing.table.DefaultTableModel;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ModelAsignaturas {
+    private Connection con;
+    private PreparedStatement ps;
+    private ResultSet rs;
 
-    private Statement stmt;
+    public ModelAsignaturas() {
+        this.con = ConectionBD.getConn();
+    }
 
-    public DefaultTableModel CargaDatos(DefaultTableModel m) {
-        String[] titulos = {"ID", "Nombre", "Créditos", "Tipo", "Curso", "Cuatrimestre", "Id Profesor", "Id Grado"};
-        m = new DefaultTableModel(null, titulos);
+    public ResultSet listar() throws SQLException {
+        Statement st = con.createStatement();
+        return st.executeQuery("SELECT * FROM asignatura");
+    }
 
-        try {
-            stmt = ConectionBD.getStmt();
-            ResultSet rs = stmt.executeQuery("select * from asignatura");
-            String[] fila = new String[8];
+    public boolean insertar(int id, String nombre, int creditos, String tipo, String curso, String cuatrimestre, int idProfesor, int idGrado) throws SQLException {
+        ps = con.prepareStatement("INSERT INTO asignatura (id, nombre, creditos, tipo, curso, cuatrimestre, id_profesor, id_grado) VALUES (?,?,?,?,?,?,?,?)");
+        ps.setInt(1, id);
+        ps.setString(2, nombre);
+        ps.setInt(3, creditos);
+        ps.setString(4, tipo);
+        ps.setString(5, curso);
+        ps.setString(6, cuatrimestre);
+        ps.setInt(7, idProfesor);
+        ps.setInt(8, idGrado);
+        return ps.executeUpdate() > 0;
+    }
 
-            while (rs.next()) {
-                fila[0] = rs.getString("id");
-                fila[1] = rs.getString("nombre");
-                fila[2] = rs.getString("creditos");
-                fila[3] = rs.getString("tipo");
-                fila[4] = rs.getString("curso");
-                fila[5] = rs.getString("cuatrimestre");
-                fila[6] = rs.getString("id_profesor");
-                fila[7] = rs.getString("id_grado");
-                m.addRow(fila);
-            }
-        } catch (SQLException e) {
+    public boolean borrar(int id) throws SQLException {
+        ps = con.prepareStatement("DELETE FROM asignatura WHERE id = ?");
+        ps.setInt(1, id);
+        return ps.executeUpdate() > 0;
+    }
 
-        }
-        return m;
+    public ResultSet buscarPorId(int id) throws SQLException {
+        ps = con.prepareStatement("SELECT * FROM asignatura WHERE id = ?");
+        ps.setInt(1, id);
+        return ps.executeQuery();
+    }
+
+    public boolean modificar(int id, String nombre, int creditos, String tipo, String curso, String cuatrimestre, int idProfesor, int idGrado) throws SQLException {
+        String sqlUpdate = "UPDATE asignatura SET nombre = ?, creditos = ?, tipo = ?, curso = ?, cuatrimestre = ?, id_profesor = ?, id_grado = ? WHERE id = ?";
+        ps = con.prepareStatement(sqlUpdate);
+        ps.setString(1, nombre);
+        ps.setInt(2, creditos);
+        ps.setString(3, tipo);
+        ps.setString(4, curso);
+        ps.setString(5, cuatrimestre);
+        ps.setInt(6, idProfesor);
+        ps.setInt(7, idGrado);
+        ps.setInt(8, id);
+        return ps.executeUpdate() > 0;
+    }
+
+    public void close() throws SQLException {
+        if (con != null) con.close();
+        if (ps != null) ps.close();
+        if (rs != null) rs.close();
     }
 }
